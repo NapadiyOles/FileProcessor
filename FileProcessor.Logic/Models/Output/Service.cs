@@ -1,6 +1,6 @@
 ﻿namespace FileProcessor.Logic.Models.Output;
 
-public class Service
+internal class Service
 {
     public string? Name { get; set; }
     public List<Payer>? Payers { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace FileProcessor.Logic.Models;
 
-public class Config
+internal class Config
 {
     public string? PrecessFolderPath { get; set; }
 }

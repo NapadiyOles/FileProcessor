@@ -1,6 +1,6 @@
 ﻿namespace FileProcessor.Logic.Models.Output;
 
-public class Transaction
+internal class Transaction
 {
     public string? City { get; set; }
     public List<Service>? Services { get; set; }

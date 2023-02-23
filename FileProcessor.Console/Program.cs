@@ -1,20 +1,35 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using FileProcessor.Logic;
+using FileProcessor.Logic.Exceptions;
 
-var services = new ServiceCollection();
+// Console.WriteLine("Press ESC to stop");
 
-services
-    .AddLogging(c => c.AddConsole())
-    .AddSingleton<ProcessingService>();
 
-using (var provider = services.BuildServiceProvider())
+ProcessingService? service = default;
+
+try
 {
-    var service = provider.GetService<ProcessingService>();
-    service?.Start();
+    service = new ProcessingService();
+}
+catch (InvalidConfigException)
+{
+    Console.WriteLine("Quiting");
+    return;
 }
 
-Console.WriteLine("Press ESC to stop");
+using (service)
+{
+    service.Start();
+
+    do
+    {
+        Console.WriteLine("Press Q to quit.");
+    } while (Console.ReadKey(true).Key != ConsoleKey.Q);
+}
+
+// while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Q)) ;
+Console.WriteLine("Quiting");
 
 //
 // while (!(Console.KeyAvailable && 

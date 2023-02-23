@@ -1,18 +1,28 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FileProcessor.Logic.Exceptions;
+using Microsoft.Extensions.Logging;
+using static FileProcessor.Logic.Utilities.LoggingManager;
 
 namespace FileProcessor.Logic.Utilities;
 
-public static class ProcessFolderManager
+internal static class ProcessFolderManager
 {
-    public static void CheckIfExists(string path, ILogger logger)
+    public static (DirectoryInfo sources, DirectoryInfo results) GetFolders(string path)
     {
-        if (Directory.Exists(path))
+        var dir = new DirectoryInfo(path);
+        
+        try
         {
-            
+            dir.Create();
         }
-        else
+        catch (IOException)
         {
-            Directory.CreateDirectory(path);
+            Logger.LogError("The path is invalid: {Path}", path);
+            throw new InvalidConfigException();
         }
+        
+        var sources = dir.CreateSubdirectory("sources");
+        var results = dir.CreateSubdirectory("results");
+
+        return (sources, results);
     }
 }

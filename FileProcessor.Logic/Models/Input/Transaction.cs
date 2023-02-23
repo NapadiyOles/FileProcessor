@@ -1,6 +1,6 @@
 ﻿namespace FileProcessor.Logic.Models.Input;
 
-public class Transaction
+internal class Transaction
 {
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

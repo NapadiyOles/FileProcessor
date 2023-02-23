@@ -1,6 +1,6 @@
 ﻿namespace FileProcessor.Logic.Models.Output;
 
-public class Payer
+internal class Payer
 {
     public string? Name { get; set; }
     public decimal Payment { get; set; }

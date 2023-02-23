@@ -1,23 +1,30 @@
-﻿using FileProcessor.Logic.Utilities;
+﻿using FileProcessor.Logic.Core;
+using FileProcessor.Logic.Core.Operators;
+using FileProcessor.Logic.Utilities;
 using Microsoft.Extensions.Logging;
+using static FileProcessor.Logic.Utilities.LoggingManager;
 
 namespace FileProcessor.Logic;
 
-public class ProcessingService
+public sealed class ProcessingService : IDisposable
 {
-    private readonly ILogger _logger;
-    private readonly string _precessPath;
-    
-    public ProcessingService(ILogger<ProcessingService> logger)
+    private readonly DirectoryInfo _sources, _results;
+    private readonly FileOperatorFactory _factory;
+    public ProcessingService()
     {
-        _logger = logger;
-        _precessPath = ConfigManager.GetPath(logger);
-        ProcessFolderManager.CheckIfExists(_precessPath, logger);
+        var path = ConfigManager.GetPath();
+        var folders = ProcessFolderManager.GetFolders(path);
+        (_sources, _results) = folders;
+        _factory = new FileOperatorFactory(_sources.FullName);
     }
 
     public void Start()
     {
-        _logger.LogInformation("Working......");
+        _factory.InitByType(FileType.Txt, FileType.Csv);
+    }
 
+    public void Dispose()
+    {
+        _factory.Dispose();
     }
 }

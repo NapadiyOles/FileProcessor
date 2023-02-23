@@ -3,40 +3,41 @@ using System.Text.Json;
 using FileProcessor.Logic.Exceptions;
 using FileProcessor.Logic.Models;
 using Microsoft.Extensions.Logging;
+using static FileProcessor.Logic.Utilities.LoggingManager;
 
 namespace FileProcessor.Logic.Utilities;
 
-public static class ConfigManager
+internal static class ConfigManager
 {
     private const string ConfigPath = @"../../../../config.json";
-    public static string GetPath(ILogger logger)
+    public static string GetPath()
     {
         string processPath = "";
         if (File.Exists(ConfigPath))
         {
-            processPath = ReadConfig(logger);
+            processPath = ReadConfig();
         }
         else
         {
-            logger.LogWarning("Config not found");
+            Logger.LogWarning("Config not found");
             
-            CreateConfig(logger);
+            CreateConfig();
         }
 
         return processPath;
     }
 
-    private static void CreateConfig(ILogger logger)
+    private static void CreateConfig()
     {
         var cfg = new Config { PrecessFolderPath = "" };
         var contents = JsonSerializer.Serialize(cfg);
         
         File.WriteAllText(ConfigPath, contents);
 
-        logger.LogInformation("New config file was created at {CfgPath}", Path.GetFullPath(ConfigPath));
+        Logger.LogInformation("New config file was created at {Path}", Path.GetFullPath(ConfigPath));
     }
 
-    private static string ReadConfig(ILogger logger)
+    private static string ReadConfig()
     {
         var json = File.ReadAllText(ConfigPath);
 
@@ -47,15 +48,15 @@ public static class ConfigManager
         }
         catch (JsonException)
         {
-            logger.LogError("Invalid config file");
+            Logger.LogError("Invalid config file");
             throw new InvalidConfigException();
         }
 
         var processPath = cfg?.PrecessFolderPath ?? "";
 
-        if (!Path.IsPathFullyQualified(processPath) && Path.HasExtension(processPath))
+        if (!Path.IsPathFullyQualified(processPath) || Path.HasExtension(processPath) || processPath.Contains(" "))
         {
-            logger.LogError("Path is invalid or empty");
+            Logger.LogError("Path is invalid. It must be full and not contain special chars or file extensions");
             throw new InvalidConfigException();
         }
 
