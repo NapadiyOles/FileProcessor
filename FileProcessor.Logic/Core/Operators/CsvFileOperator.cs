@@ -9,7 +9,7 @@ internal sealed class CsvFileOperator : BaseFileOperator
     {
     }
 
-    protected override async void WatcherOnCreated(object sender, FileSystemEventArgs e)
+    protected override async void WatchOnCreated(object sender, FileSystemEventArgs e)
     {
         await Task.Run(() =>
         {
