@@ -1,9 +1,6 @@
 ﻿using FileProcessor.Logic;
 using FileProcessor.Logic.Exceptions;
 
-// Console.WriteLine("Press ESC to stop");
-
-
 ProcessingService? service = default;
 
 try
@@ -12,27 +9,40 @@ try
 }
 catch (InvalidConfigException)
 {
-    Console.WriteLine("Quiting");
+    Console.WriteLine("Quiting...");
     return;
 }
 
-using (service)
+Console.WriteLine("Press key to (1: start, 2: stop, 3: restart)");
+
+ConsoleKey prevKey = default;
+
+do
 {
-    service.Start();
+    var currKey = Console.ReadKey(true).Key;
 
-    do
+    switch (currKey)
     {
-        Console.WriteLine("Press Q to quit.");
-    } while (Console.ReadKey(true).Key != ConsoleKey.Q);
-}
-
-// while (!(Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Q)) ;
-Console.WriteLine("Quiting");
-
-//
-// while (!(Console.KeyAvailable && 
-//          Console.ReadKey(true).Key == ConsoleKey.Q))
-// {
-//     Console.WriteLine("Doing stuff...");
-//     Thread.Sleep(500);
-// }
+        case ConsoleKey.D1:
+            if (prevKey == ConsoleKey.D1 || prevKey == ConsoleKey.D3)
+            {
+                Console.WriteLine("Service is already running");
+                continue;
+            }
+            Console.WriteLine("Starting...");
+            service.Start();
+            break;
+        case ConsoleKey.D2:
+            Console.WriteLine("Quiting...");
+            service.Dispose();
+            return;
+        case ConsoleKey.D3:
+            Console.WriteLine("Restart...");
+            service.Dispose();
+            service = new ProcessingService();
+            service.Start();
+            break;
+    }
+    prevKey = currKey;
+    
+} while (true);

@@ -37,45 +37,6 @@ internal sealed class DataProcessor
                 AccountNumber = rec.AccountNumber
             });
         });
-
-        // var _ = transactions.GroupBy(
-        //     e => e.Address!.Split(',')[0],
-        //     e => new
-        //     {
-        //         Service = e.Service,
-        //         Name = $"{e.FirstName} {e.LastName}",
-        //         Payment = e.Payment,
-        //         Date = DateOnly.ParseExact(e.Date!, "yyyy-dd-MM"),
-        //         AccountNumber = e.AccountNumber
-        //     },
-        //     (city, services) =>
-        //     {
-        //         var serviceList = services.ToList();
-        //         return new Transaction
-        //         {
-        //             City = city,
-        //             Services = serviceList.GroupBy(
-        //                 e => e.Service,
-        //                 e => new Payer
-        //                 {
-        //                     Name = e.Name,
-        //                     Payment = e.Payment,
-        //                     Date = e.Date,
-        //                     AccountNumber = e.AccountNumber
-        //                 },
-        //                 (service, payers) =>
-        //                 {
-        //                     var list = payers.ToList();
-        //                     return new Service
-        //                     {
-        //                         Name = service,
-        //                         Payers = list,
-        //                         Total = list.Count
-        //                     };
-        //                 }).ToList(),
-        //             Total = serviceList.Count
-        //         };
-        //     });
     }
     
     public IEnumerable<Transaction> GetTransactions()

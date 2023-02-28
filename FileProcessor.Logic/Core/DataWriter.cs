@@ -19,12 +19,10 @@ internal sealed class DataWriter
         await JsonSerializer.SerializeAsync(stream, transactions);
     }
 
-    public static void WriteMetaLog(object? meta)
+    public static void WriteMetaLog(object? meta, string path)
     {
         if(meta is not MetaData data) return;
-        using var writer = File.CreateText(MetaData.SubDir + "\\meta.log");
+        using var writer = File.CreateText(path + "\\meta.log");
         writer.WriteAsync(data.ToString());
-        MetaData.SubDir = MetaData.SubDir?.Parent?
-            .CreateSubdirectory(DateOnly.FromDateTime(DateTime.Now).ToShortDateString()) ?? default;
     }
 }
