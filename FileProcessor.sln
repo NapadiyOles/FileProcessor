@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileProcessor.Console", "FileProcessor.Console\FileProcessor.Console.csproj", "{2C860112-6945-42CD-AFBB-47ED89CE8FFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileProcessor.Service", "FileProcessor.Service\FileProcessor.Service.csproj", "{6B406803-43C6-4342-A5FE-B403FA61B46B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileProcessor.Logic", "FileProcessor.Logic\FileProcessor.Logic.csproj", "{6B406803-43C6-4342-A5FE-B403FA61B46B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
