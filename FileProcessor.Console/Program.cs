@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using FileProcessor.Logic;
+﻿using FileProcessor.Logic;
 using FileProcessor.Logic.Exceptions;
 
 // Console.WriteLine("Press ESC to stop");

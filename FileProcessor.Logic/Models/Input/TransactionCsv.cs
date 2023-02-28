@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+﻿using System.Globalization;
 using CsvHelper.Configuration;
-using CsvHelper.Configuration.Attributes;
 
 namespace FileProcessor.Logic.Models.Input;
 
-internal class Transaction
+internal class TransactionCsv
 {
     public string? FirstName { get; set; }
 
@@ -15,14 +13,14 @@ internal class Transaction
 
     public decimal Payment { get; set; }
 
-    public string Date { get; set; }
+    public string? Date { get; set; }
 
     public long AccountNumber { get; set; }
 
     public string? Service { get; set; }
 }
 
-internal sealed class TransactionMap : ClassMap<Transaction>
+internal sealed class TransactionMap : ClassMap<TransactionCsv>
 {
     public TransactionMap()
     {
@@ -33,7 +31,8 @@ internal sealed class TransactionMap : ClassMap<Transaction>
             .Validate(args => !string.IsNullOrWhiteSpace(args.Field));
 
         Map(e => e.Address).Index(2)
-            .Validate(args => !string.IsNullOrWhiteSpace(args.Field));
+            .Validate(args => !string.IsNullOrWhiteSpace(args.Field) &&
+                              args.Field.Split(',').Length is 3);
 
         Map(e => e.Payment).Index(3)
             .Validate(args => float.TryParse(args.Field, new CultureInfo("en-US"), out _));

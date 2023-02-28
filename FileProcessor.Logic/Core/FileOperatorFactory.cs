@@ -1,4 +1,4 @@
-﻿using FileProcessor.Logic.Core.Operators;
+﻿using FileProcessor.Logic.Core.Operator;
 using Microsoft.Extensions.Logging;
 using static FileProcessor.Logic.Utilities.LoggingManager;
 
@@ -6,20 +6,21 @@ namespace FileProcessor.Logic.Core;
 
 internal sealed class FileOperatorFactory : IDisposable
 {
-    private readonly string _path;
+    private readonly string _source, _result;
     private List<BaseFileOperator>? _operators;
 
-    public FileOperatorFactory(string path)
+    public FileOperatorFactory(string source, string result)
     {
-        _path = path;
+        _source = source;
+        _result = result;
     }
 
     public void InitAll()
     {
         _operators = new List<BaseFileOperator>
         {
-            new TxtFileOperator(_path),
-            new CsvFileOperator(_path)
+            new TxtFileOperator(_source, _result),
+            new CsvFileOperator(_source, _result)
         };
     }
     
@@ -32,10 +33,10 @@ internal sealed class FileOperatorFactory : IDisposable
             switch (type)
             {
                 case FileType.Txt:
-                    _operators.Add(new TxtFileOperator(_path));
+                    _operators.Add(new TxtFileOperator(_source, _result));
                     break;
                 case FileType.Csv:
-                    _operators.Add(new CsvFileOperator(_path));
+                    _operators.Add(new CsvFileOperator(_source, _result));
                     break;
                 default:
                     Logger.LogError("Unsupported file type: {Type}", type);
@@ -43,7 +44,7 @@ internal sealed class FileOperatorFactory : IDisposable
             }    
         }
     }
-
+    
     public void Dispose()
     {
         if (_operators is null) return;

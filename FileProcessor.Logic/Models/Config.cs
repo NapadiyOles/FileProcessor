@@ -2,5 +2,6 @@
 
 internal class Config
 {
-    public string? PrecessFolderPath { get; set; }
+    public string SourcePath { get; set; } = "";
+    public string ResultPath { get; set; } = "";
 }

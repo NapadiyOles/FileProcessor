@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using System.Text.Json;
+﻿using System.Text.Json;
 using FileProcessor.Logic.Exceptions;
 using FileProcessor.Logic.Models;
 using Microsoft.Extensions.Logging;
@@ -10,26 +9,21 @@ namespace FileProcessor.Logic.Utilities;
 internal static class ConfigManager
 {
     private const string ConfigPath = @"../../../../config.json";
-    public static string GetPath()
+    public static Config GetConfig()
     {
-        string processPath = "";
-        if (File.Exists(ConfigPath))
-        {
-            processPath = ReadConfig();
-        }
-        else
+        if (!File.Exists(ConfigPath))
         {
             Logger.LogWarning("Config not found");
-            
             CreateConfig();
+            throw new InvalidConfigException();
         }
 
-        return processPath;
+        return ReadConfig();
     }
 
     private static void CreateConfig()
     {
-        var cfg = new Config { PrecessFolderPath = "" };
+        var cfg = new Config();
         var contents = JsonSerializer.Serialize(cfg);
         
         File.WriteAllText(ConfigPath, contents);
@@ -37,7 +31,7 @@ internal static class ConfigManager
         Logger.LogInformation("New config file was created at {Path}", Path.GetFullPath(ConfigPath));
     }
 
-    private static string ReadConfig()
+    private static Config ReadConfig()
     {
         var json = File.ReadAllText(ConfigPath);
 
@@ -52,14 +46,24 @@ internal static class ConfigManager
             throw new InvalidConfigException();
         }
 
-        var processPath = cfg?.PrecessFolderPath ?? "";
-
-        if (!Path.IsPathFullyQualified(processPath) || Path.HasExtension(processPath) || processPath.Contains(" "))
+        if (cfg is null)
         {
-            Logger.LogError("Path is invalid. It must be full and not contain special chars or file extensions");
+            Logger.LogError("Invalid config file");
             throw new InvalidConfigException();
         }
+        
+        PathIsValid(cfg.SourcePath, "Source");
+        PathIsValid(cfg.ResultPath, "Result");
+        
+        return cfg;
+    }
 
-        return processPath;
+    private static void PathIsValid(string path, string name)
+    {
+        if (!Path.IsPathFullyQualified(path) || Path.HasExtension(path) || path.Contains(" "))
+        {
+            Logger.LogError("{Name} path is invalid. It must be full and not contain special chars or file extensions", name);
+            throw new InvalidConfigException();
+        }
     }
 }
