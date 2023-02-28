@@ -61,7 +61,6 @@ internal abstract class BaseFileOperator : IDisposable
         if (reader is null) return default;
             
         var (parsed, errors) = await ReadFileAsync(reader, processor);
-        File.Delete(file);
 
         var transactions = processor.GetTransactions();
         await writer.WriteToJsonAsync(transactions);
